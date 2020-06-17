@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 13px Helvetica, Arial;
+        }
+
+        form {
+            background: #000;
+            padding: 3px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        form input {
+            border: 0;
+            padding: 10px;
+            width: 90%;
+            margin-right: 0.5%;
+        }
+
+        form button {
+            width: 9%;
+            background: rgb(130, 224, 255);
+            border: none;
+            padding: 10px;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages li {
+            padding: 5px 10px;
+        }
+
+        #messages li:nth-child(odd) {
+            background: #eee;
+        }
+        .auto {
+            margin: 0 auto;
+            float: none
+        }
+    </style>
+</head>
+
+<body>
+    <input id="username" type="text" placeholder="Enter your name"/> 
+    <!-- <p id="name"></p> -->
+            <p id="messages"></p>
+  
+    <form action="">
+        <input class="auto" id="m" autocomplete="off" /><button class="btn btn-warning">Send</button>
+    </form>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        $(function () {
+            var socket = io();
+            $('form').submit(function (e) {
+                e.preventDefault(); // prevents page reloading
+                socket.emit('username', $('#username').val());
+                socket.emit('chat message', $('#m').val());
+                $('#m').val('');
+                return false;
+            });
+            socket.on('username', (data) => {
+                $('#name').append($('<p>').text(data));
+            })
+
+            socket.on('chat message', function (msg) {
+                $('#messages').append($('<p>').text(msg));
+            });
+        });
+    </script>
+</body>
+
+</html>
